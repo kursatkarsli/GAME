@@ -3,14 +3,11 @@ class Shot{
     private int y = 0;
     public Shot(int x ,int y) {
         this.x = x ;
-        this.y = y ;
-        
+        this.y = y ;        
     }
-
     public int getX() {
         return x;
     }
-
     public void setX(int x) {
         this.x = x;
     }
