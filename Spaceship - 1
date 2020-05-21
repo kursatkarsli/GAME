@@ -1,18 +1,22 @@
-public class Spacegame extends JFrame{
-  private Spacegame(String space_game) {
-      super(space_game);} 
+ublic class Spacegame extends JFrame {
+
+    private Spacegame(String space_game) {
+        super(space_game);
+    }
+
     public static void main(String[] args) {
         Spacegame game = new Spacegame("SPACE GAME");
         game.setResizable(false);
         game.setFocusable(false);
-        game.setSize(800,600);
+        game.setSize(800, 600);
         game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Background panel = new Background();
-        panel.requestFocus();
-        panel.addKeyListener(panel);
-        panel.setFocusable(true);
-        panel.setFocusTraversalKeysEnabled(false);
-        game.add(panel);
-        game.setLocation(400,100);
+        Background Jpanel = new Background();
+        Jpanel.requestFocus();
+        Jpanel.addKeyListener(panel);
+        Jpanel.setFocusable(true);
+        Jpanel.setFocusTraversalKeysEnabled(false);
+        game.add(Jpanel);
+        game.setLocation(400, 100);
         game.setVisible(true);
-       }}
+    }
+}
