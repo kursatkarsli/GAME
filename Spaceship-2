@@ -1,103 +1,97 @@
-class Shot{
-    private int x = 0 ;
-    private int y = 0;
-    public Shot(int x ,int y) {
-        this.x = x ;
-        this.y = y ;        
-    }
-    public int getX() {
-        return x;
-    }
-    public void setX(int x) {
-        this.x = x;
+public class ShotInfo {
+    private int xCoordinate = 0;
+    private int yCoordinate = 0;
+
+    public Shot(int x, int y) {
+        this.xCoordinate = x;
+        this.yCoordinate = y;
     }
 
-    public int getY() {
-        return y;
+    public int getXCoordinate() {
+        return xCoordinate;
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public void setXCoordinate(int xCoordinate) {
+        this.xCoordinate = xCoordinate;
     }
-   
-}
-public class UZAYARKA extends JPanel implements KeyListener,ActionListener{
-      Timer timer = new Timer(5, this);
-    private int passing_time = 0 ;
-    private int shot = 0;
-    private BufferedImage image ;
-    private ArrayList<Shot> Shot_number = new ArrayList<Shot>();
-    private int shot_y = 1 ;
-    private int ball_x = 1 ;
-    private int ball_x_dir = 5;
-    private int spaceship_x = 0;
-    private int dir_spaceship_x = 20;
-    
-    public boolean control(){
-        
-    for (Shot shot : Shot_number){
-        if (new Rectangle(shot.getX(),shot.getY(),20,20).intersects(new Rectangle(ball_x,0,20,20))){
-        
-        return true;
-        }
+
+    public int getYCoordinate() {
+        return yCoordinate;
     }
-    return false;
+
+    public void setYCoordinate(int yCoordinate) {
+        this.yCoordinate = yCoordinate;
+    }
 }
 
-    public UZAYARKA() {
-        try {
-            image = ImageIO.read(new FileImageInputStream(new File("uzaygemisi.png")));
-        } catch (IOException ex) {
-            Logger.getLogger(UZAYARKA.class.getName()).log(Level.SEVERE, null, ex);
-        }
+public class SpaceshipEngine extends JPanel implements KeyListener, ActionListener {
+    public static final String SPACESHIP_IMAGE_PATH = "uzaygemisi.png";
+    public static final int BALL_SIDE_LENGTH = 20;
+    public static final int PASSING_UNIT_TIME = 5;
+    var timer = new Timer(5, this);
+    private int passing_time = 0;
+    private int shot_count = 0;
+    private BufferedImage spaceship_image;
+    private ArrayList<Shot> shot_number = new ArrayList<Shot>();
+    private int shot_yCoordinate = 1;
+    private int ball_xCoordinate = 1;
+    private int ball_movement_step = 5;
+    private int spaceship_xCoordinate = 0;
+    private int spaceship_movement_step = 20;
+
+    public SpaceshipEngine() {
+        spaceship_image = getSpaceshipImage();
         setBackground(Color.BLACK);
-            
-             timer.start();
-              
+
+        timer.start();
+    }
+
+    public boolean checkShotIntersectionWithBall() {
+        var ballArea = new Rectangle(ball_xCoordinate, 0, BALL_SIDE_LENGTH, BALL_SIDE_LENGTH);
+
+        for (Shot shot : shot_number) {
+            var shotArea = new Rectangle(shot.getX(), shot.getY(), BALL_SIDE_LENGTH, BALL_SIDE_LENGTH);
+            if (shotArea.intersects(ballArea)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
     public void paint(Graphics g) {
-        passing_time +=5;
+        passing_time += PASSING_UNIT_TIME;
         super.paint(g); //To change body of generated methods, choose Tools | Templates.
         g.setColor(Color.red);
-        g.fillOval(ball_x, 0, 20, 20);
-       g.drawImage(image, spaceship_x, 490, image.getWidth()/10, image.getHeight()/10, this);
-       for(Shot shot : Shot_number){
-           if(shot.getY()<0){
-               Shot_number.remove(shot);
-           }
-       
-            
+        g.fillOval(ball_xCoordinate, 0, 20, 20);
+        g.drawImage(spaceship_image, spaceship_xCoordinate, 490, spaceship_image.getWidth() / 10, spaceship_image.getHeight() / 10, this);
+        for (Shot shot : shot_number) {
+            if (shot.getY() < 0) {
+                shot_number.remove(shot);
+            }
         }
-         g.setColor(Color.YELLOW);
-         for(Shot shot : Shot_number){
-             g.fillRect(shot.getX(), shot.getY(),15, 15);
-         }
-         if(control()){
-             timer.stop();
-             String message = "YOU WİN\n"
-                     + " PASSİNG TİME = " + passing_time /1000.0
-                     + "\n USİNG SHOTS = " + shot;
-             JOptionPane.showMessageDialog(this, message); 
-             System.exit(0);
-         }
-         
-       
-       }
-    
-    
+        g.setColor(Color.YELLOW);
+        for (Shot shot : shot_number) {
+            g.fillRect(shot.getX(), shot.getY(), 15, 15);
+        }
+        if (checkShotIntersectionWithBall()) {
+            timer.stop();
+            String message = "YOU WİN\n"
+                    + " PASSİNG TİME = " + passing_time / 1000.0
+                    + "\n USİNG SHOTS = " + shot_count;
+            JOptionPane.showMessageDialog(this, message);
+            System.exit(0);
+        }
+    }
 
     @Override
     public void repaint() {
         super.repaint(); //To change body of generated methods, choose Tools | Templates.
     }
-   
- 
-    
-            
-   
-     @Override
+
+
+    @Override
     public void keyTyped(KeyEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -105,27 +99,24 @@ public class UZAYARKA extends JPanel implements KeyListener,ActionListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
-         int a = e.getKeyCode();
-        if(a == KeyEvent.VK_LEFT){
-            if(spaceship_x <= 0){
-                spaceship_x= 0;
+        int a = e.getKeyCode();
+        if (a == KeyEvent.VK_LEFT) {
+            if (spaceship_xCoordinate <= 0) {
+                spaceship_xCoordinate = 0;
+            } else {
+                spaceship_xCoordinate -= spaceship_movement_step;
             }
-            else{
-                spaceship_x-=dir_spaceship_x;
-            }
-            
+
         }
-        if(a == KeyEvent.VK_RIGHT){
-            if(spaceship_x >= 740){
-                spaceship_x = 740;
+        if (a == KeyEvent.VK_RIGHT) {
+            if (spaceship_xCoordinate >= 740) {
+                spaceship_xCoordinate = 740;
+            } else {
+                spaceship_xCoordinate += spaceship_movement_step;
             }
-            else{
-                spaceship_x+=dir_spaceship_x;
-            }
-        }
-        else if (a == KeyEvent.VK_CONTROL){
-            Shot_number.add(new Shot(spaceship_x+15, 485));
-            shot++;
+        } else if (a == KeyEvent.VK_CONTROL) {
+            shot_number.add(new Shot(spaceship_xCoordinate + 15, 485));
+            shot_count++;
         }
     }
 
@@ -136,19 +127,28 @@ public class UZAYARKA extends JPanel implements KeyListener,ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ball_x +=ball_x_dir;
-        if(ball_x>=770){
-            ball_x_dir = -ball_x_dir;
-        }
-        else if(ball_x <= 0){
-      ball_x_dir = -ball_x_dir;
+        ball_xCoordinate += ball_movement_step;
+        if (ball_xCoordinate >= 770) {
+            ball_movement_step = -ball_movement_step;
+        } else if (ball_xCoordinate <= 0) {
+            ball_movement_step = -ball_movement_step;
 
         }
-        for(Shot shot : Shot_number){
-            shot.setY(shot.getY()-shot_y);
+        for (Shot shot : shot_number) {
+            shot.setY(shot.getY() - shot_yCoordinate);
         }
-         repaint();
+        repaint();
     }
-    
-    
+
+    private BufferedImage getSpaceshipImage() {
+        try {
+            var spaceshipImage = new File(SPACESHIP_IMAGE_PATH);
+            var imageInputStream = new FileImageInputStream(spaceshipImage);
+
+            return ImageIO.read(imageInputStream);
+
+        } catch (IOException ex) {
+            Logger.getLogger(SpaceshipEngine.class.getName()).log(Level.SEVERE, "Spaceship image'i okunurken hata alindi", ex);
+        }
+    }
 }
