@@ -1,29 +1,23 @@
 public class ShotInfo {
     private int xCoordinate = 0;
     private int yCoordinate = 0;
-
     public Shot(int x, int y) {
         this.xCoordinate = x;
         this.yCoordinate = y;
     }
-
     public int getXCoordinate() {
         return xCoordinate;
     }
-
     public void setXCoordinate(int xCoordinate) {
         this.xCoordinate = xCoordinate;
     }
-
     public int getYCoordinate() {
         return yCoordinate;
     }
-
     public void setYCoordinate(int yCoordinate) {
         this.yCoordinate = yCoordinate;
     }
 }
-
 public class SpaceshipEngine extends JPanel implements KeyListener, ActionListener {
     public static final String SPACESHIP_IMAGE_PATH = "uzaygemisi.png";
     public static final int BALL_SIDE_LENGTH = 20;
@@ -38,28 +32,21 @@ public class SpaceshipEngine extends JPanel implements KeyListener, ActionListen
     private int ball_movement_step = 5;
     private int spaceship_xCoordinate = 0;
     private int spaceship_movement_step = 20;
-
     public SpaceshipEngine() {
         spaceship_image = getSpaceshipImage();
         setBackground(Color.BLACK);
-
         timer.start();
     }
-
     public boolean checkShotIntersectionWithBall() {
         var ballArea = new Rectangle(ball_xCoordinate, 0, BALL_SIDE_LENGTH, BALL_SIDE_LENGTH);
-
         for (Shot shot : shot_number) {
             var shotArea = new Rectangle(shot.getX(), shot.getY(), BALL_SIDE_LENGTH, BALL_SIDE_LENGTH);
             if (shotArea.intersects(ballArea)) {
                 return true;
             }
         }
-
         return false;
     }
-
-    @Override
     public void paint(Graphics g) {
         passing_time += PASSING_UNIT_TIME;
         super.paint(g); //To change body of generated methods, choose Tools | Templates.
@@ -84,20 +71,12 @@ public class SpaceshipEngine extends JPanel implements KeyListener, ActionListen
             System.exit(0);
         }
     }
-
-    @Override
     public void repaint() {
         super.repaint(); //To change body of generated methods, choose Tools | Templates.
     }
-
-
-    @Override
     public void keyTyped(KeyEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-
-    @Override
     public void keyPressed(KeyEvent e) {
         int a = e.getKeyCode();
         if (a == KeyEvent.VK_LEFT) {
@@ -106,7 +85,6 @@ public class SpaceshipEngine extends JPanel implements KeyListener, ActionListen
             } else {
                 spaceship_xCoordinate -= spaceship_movement_step;
             }
-
         }
         if (a == KeyEvent.VK_RIGHT) {
             if (spaceship_xCoordinate >= 740) {
@@ -119,34 +97,26 @@ public class SpaceshipEngine extends JPanel implements KeyListener, ActionListen
             shot_count++;
         }
     }
-
-    @Override
     public void keyReleased(KeyEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
     public void actionPerformed(ActionEvent e) {
         ball_xCoordinate += ball_movement_step;
         if (ball_xCoordinate >= 770) {
             ball_movement_step = -ball_movement_step;
         } else if (ball_xCoordinate <= 0) {
             ball_movement_step = -ball_movement_step;
-
         }
         for (Shot shot : shot_number) {
             shot.setY(shot.getY() - shot_yCoordinate);
         }
         repaint();
     }
-
     private BufferedImage getSpaceshipImage() {
         try {
             var spaceshipImage = new File(SPACESHIP_IMAGE_PATH);
             var imageInputStream = new FileImageInputStream(spaceshipImage);
-
             return ImageIO.read(imageInputStream);
-
         } catch (IOException ex) {
             Logger.getLogger(SpaceshipEngine.class.getName()).log(Level.SEVERE, "Spaceship image'i okunurken hata alindi", ex);
         }
