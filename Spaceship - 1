@@ -1,9 +1,7 @@
-ublic class Spacegame extends JFrame {
-
+public class Spacegame extends JFrame {
     private Spacegame(String space_game) {
         super(space_game);
     }
-
     public static void main(String[] args) {
         Spacegame game = new Spacegame("SPACE GAME");
         game.setResizable(false);
